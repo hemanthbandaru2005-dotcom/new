@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hospital Management System</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(120deg,#4facfe,#00f2fe);
+}
+
+/* LOGIN */
+
+.login-box{
+width:320px;
+margin:120px auto;
+background:white;
+padding:30px;
+border-radius:12px;
+text-align:center;
+box-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
+
+.login-box h2{
+font-weight:bold;
+color:#007bff;
+}
+
+.login-box input{
+width:90%;
+padding:10px;
+margin:10px;
+}
+
+button{
+padding:10px 20px;
+background:#007bff;
+border:none;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:220px;
+background:#1e293b;
+height:100vh;
+position:fixed;
+padding:20px;
+display:none;
+}
+
+.sidebar h2{
+color:white;
+}
+
+.sidebar a{
+display:block;
+color:white;
+margin:15px 0;
+text-decoration:none;
+cursor:pointer;
+}
+
+/* MAIN */
+
+.main{
+margin-left:240px;
+padding:20px;
+display:none;
+}
+
+/* TITLE */
+
+.project-title{
+font-size:30px;
+font-weight:bold;
+color:#0f172a;
+}
+
+/* CARDS */
+
+.cards{
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+width:180px;
+box-shadow:0 3px 8px rgba(0,0,0,0.2);
+}
+
+/* TABLE */
+
+table{
+width:80%;
+margin-top:20px;
+border-collapse:collapse;
+background:white;
+}
+
+th,td{
+padding:10px;
+border:1px solid #ccc;
+}
+
+input,select{
+padding:10px;
+margin:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div class="login-box" id="loginPage">
+
+<h2>🏥 <b>HOSPITAL MANAGEMENT SYSTEM</b> 🏥</h2>
+
+<input type="text" id="username" placeholder="Username">
+<input type="password" id="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+</div>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar" id="sidebar">
+
+<h2>🏥 Hospital</h2>
+
+<a onclick="showPage('dashboard')">Dashboard</a>
+<a onclick="showPage('doctors')">Doctors</a>
+<a onclick="showPage('patients')">Patients</a>
+<a onclick="showPage('appointments')">Appointments</a>
+<a onclick="showPage('reports')">Reports</a>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main" id="main">
+
+<div class="project-title">🏥✨ <b>HOSPITAL MANAGEMENT SYSTEM PROJECT</b> ✨🏥</div>
+
+<!-- DASHBOARD -->
+
+<div id="dashboard" class="page">
+
+<h2>Dashboard</h2>
+
+<div class="cards">
+
+<div class="card">
+<h3>Doctors</h3>
+<p id="doctorCount">0</p>
+</div>
+
+<div class="card">
+<h3>Patients</h3>
+<p id="patientCount">0</p>
+</div>
+
+<div class="card">
+<h3>Appointments</h3>
+<p id="appointmentCount">0</p>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- DOCTORS -->
+
+<div id="doctors" class="page" style="display:none">
+
+<h2>Doctors</h2>
+
+<table id="doctorTable">
+
+<tr>
+<th>Name</th>
+<th>Specialization</th>
+<th>Experience</th>
+<th>Department</th>
+</tr>
+
+</table>
+
+</div>
+
+
+<!-- PATIENTS -->
+
+<div id="patients" class="page" style="display:none">
+
+<h2>Patient Records</h2>
+
+<table id="patientTable">
+
+<tr>
+<th>Name</th>
+<th>Age</th>
+<th>Illness</th>
+</tr>
+
+</table>
+
+</div>
+
+
+<!-- APPOINTMENTS -->
+
+<div id="appointments" class="page" style="display:none">
+
+<h2>Appointments</h2>
+
+<table id="appointmentTable">
+
+<tr>
+<th>Patient</th>
+<th>Doctor</th>
+<th>Date</th>
+</tr>
+
+</table>
+
+</div>
+
+
+<!-- REPORTS -->
+
+<div id="reports" class="page" style="display:none">
+
+<h2>Hospital Reports</h2>
+
+<p><b>Total Doctors:</b> <span id="rDoctor"></span></p>
+<p><b>Total Patients:</b> <span id="rPatient"></span></p>
+<p><b>Total Appointments:</b> <span id="rAppointment"></span></p>
+
+</div>
+
+</div>
+
+
+<script>
+
+let doctorsData=[
+["Dr. Rajesh","Cardiology","10 Years","Heart"],
+["Dr. Meena","Neurology","8 Years","Brain"],
+["Dr. Arjun","Orthopedics","12 Years","Bones"],
+["Dr. Kavitha","Dermatology","6 Years","Skin"],
+["Dr. Ramesh","Pediatrics","15 Years","Children"],
+["Dr. Suresh","ENT","9 Years","Ear Nose Throat"],
+["Dr. Priya","Gynecology","11 Years","Women"],
+["Dr. Rahul","Oncology","14 Years","Cancer"],
+["Dr. Nisha","Psychiatry","7 Years","Mental Health"],
+["Dr. Varun","General Medicine","13 Years","General"]
+]
+
+let illnesses=[
+"Fever","Cold","Heart Pain","Skin Allergy","Fracture",
+"Headache","Asthma","Diabetes","Back Pain","Migraine"
+]
+
+function login(){
+
+let user=document.getElementById("username").value
+let pass=document.getElementById("password").value
+
+if(user=="admin" && pass=="1234"){
+
+document.getElementById("loginPage").style.display="none"
+document.getElementById("sidebar").style.display="block"
+document.getElementById("main").style.display="block"
+
+loadDoctors()
+loadPatients()
+loadAppointments()
+
+}
+
+else{
+alert("Invalid Login")
+}
+
+}
+
+
+function showPage(page){
+
+let pages=document.getElementsByClassName("page")
+
+for(let i=0;i<pages.length;i++){
+pages[i].style.display="none"
+}
+
+document.getElementById(page).style.display="block"
+
+}
+
+
+/* LOAD DOCTORS */
+
+function loadDoctors(){
+
+let table=document.getElementById("doctorTable")
+
+doctorsData.forEach(d=>{
+let row=table.insertRow()
+row.insertCell(0).innerHTML=d[0]
+row.insertCell(1).innerHTML=d[1]
+row.insertCell(2).innerHTML=d[2]
+row.insertCell(3).innerHTML=d[3]
+})
+
+document.getElementById("doctorCount").innerText=doctorsData.length
+document.getElementById("rDoctor").innerText=doctorsData.length
+
+}
+
+
+/* LOAD 100 PATIENTS */
+
+function loadPatients(){
+
+let table=document.getElementById("patientTable")
+
+for(let i=1;i<=100;i++){
+
+let illness=illnesses[Math.floor(Math.random()*illnesses.length)]
+
+let row=table.insertRow()
+
+row.insertCell(0).innerHTML="Patient "+i
+row.insertCell(1).innerHTML=Math.floor(Math.random()*60)+20
+row.insertCell(2).innerHTML=illness
+
+}
+
+document.getElementById("patientCount").innerText=100
+document.getElementById("rPatient").innerText=100
+
+}
+
+
+/* LOAD 50 APPOINTMENTS */
+
+function loadAppointments(){
+
+let table=document.getElementById("appointmentTable")
+
+for(let i=1;i<=50;i++){
+
+let row=table.insertRow()
+
+row.insertCell(0).innerHTML="Patient "+i
+row.insertCell(1).innerHTML=doctorsData[Math.floor(Math.random()*doctorsData.length)][0]
+row.insertCell(2).innerHTML="2026-03-"+(Math.floor(Math.random()*28)+1)
+
+}
+
+document.getElementById("appointmentCount").innerText=50
+document.getElementById("rAppointment").innerText=50
+
+}
+
+</script>
+
+</body>
+</html>
